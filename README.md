@@ -11,13 +11,8 @@ it is unavailable now.
 
 Usage
 ------------
-
-1. Removing all comments.
-
-2. Normalizing the source codes to GCC standard styles.
-
-3. Using mutate.py
-
 ```bash
 ./mutate.py <c file> -o <where to put mutants>
 ```
+
+* Works better if comments are removed (decomment tool or gcc) and code is indented (indent tool)
