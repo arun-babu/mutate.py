@@ -1,13 +1,9 @@
 A simple mutation script
 ==========================
-This is a simple python script for 
-mutation analysis. It can generate mutants
-from source codes of C programs.
+This is a simple python script for performing mutation testing. It can generate mutants for C programs.
 
 Usage
 ------------
-```bash
-./mutate.py <c file> -o <where to put mutants>
-```
+python mutate.py <file-to-mutate.c> [output-mutant-file-name.c]
 
 * Works better if comments are removed (decomment tool or gcc) and code is indented (indent tool)
