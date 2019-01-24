@@ -109,12 +109,13 @@ mutation_trick = {
 	" false " :  " true  ",
 
 	"if (" :
-		[ "if ( ! ", "if ( ~ ", "if ( true || ", "if ( false && " ],
+		[ "if ( ! ", "if ( ~ ", "if ( 1 || ", "if ( 0 && " ],
 	"while (" :
-		[ "while ( ! ", "while ( ~ ", "while ( false && " ],
+		[ "while ( ! ", "while ( ~ ", "while ( 0 && " , "// while (", " if (", "if (!"],
 	
 	"break;" : "{;}",
 	"continue;" : "{;}",
+	"goto " : "//goto ",
 
 	"return " : 
 		[ "return 0; //", "return 1; //", "return NULL; //", "return -1; //", "return 2* ", "return -1 * " ],
@@ -150,7 +151,7 @@ mutation_trick = {
 	"," :
 		[ ", ! ", ", 0 * ", ", -1 * ", ", 2 *" ],
 	" ? " :
-		[ " && false ? ", " || true ? " ],
+		[ " && 0 ? ", " || 1 ? " ],
 	" int " :
 		[" short int ", " char " ],
 	" signed " : " unsigned ",
@@ -168,6 +169,9 @@ mutation_trick = {
 
 	# null terminate a string
 	"\"": "\"\\0",
+
+	"else {": "{",
+	"else": "// else",
 }
 
 def main (input_file, output_file = False ) :
