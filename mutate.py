@@ -165,6 +165,9 @@ mutation_trick = {
 
 	"case ": "// case ",
 	"default ": "// default ",
+
+	# null terminate a string
+	"\"": "\"\\0",
 }
 
 def main (input_file, output_file = False ) :
