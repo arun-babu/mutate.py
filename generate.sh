@@ -14,3 +14,7 @@ do
         	i=$(($i+1))
 	fi
 done
+
+echo
+echo "=====>" `ls -l mutated_code/ | wc -l` "mutants generated!"
+echo
