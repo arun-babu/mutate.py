@@ -26,6 +26,10 @@ import random
 NULL_STRING = " "
 
 mutation_trick = {
+	"true"	:
+		"false",
+	"false" :
+		"true",
 	" < " : 
 		[ " != ", " > ", " <= ", " >= ", " == " ],
 	" > " : 
@@ -172,6 +176,11 @@ mutation_trick = {
 	" float ": " int ",
 	" double ": " int ",
 
+	" for (" :
+		"// for (",
+
+	" while (" :
+		"// while (",
 
 	" free(": "// free(",
 
@@ -183,6 +192,32 @@ mutation_trick = {
 
 	"else {": "{",
 	"else": "// else",
+
+	# compound shift-assign (same class as +=, -=, *=, /=, %= above)
+	">>=" :
+		[ "<<=", "&=", "|=", "^=", "=" ],
+	"<<=" :
+		[ ">>=", "&=", "|=", "^=", "=" ],
+
+	# NULL literal swap
+	"NULL" :
+		[ "0", "(void*)1" ],
+
+	# boundary-value mutation (space-padded so it can't match inside hex constants)
+	" 0;" :
+		[ " 1;", " -1;", " 2;" ],
+	" 1;" :
+		[ " 0;", " 2;", " -1;" ],
+	" 0)" :
+		[ " 1)", " -1)" ],
+	" 1)" :
+		[ " 0)", " 2)" ],
+
+	# qualifier deletion
+	"const " : NULL_STRING,
+	"static " : NULL_STRING,
+	"volatile " : NULL_STRING,
+	"inline " : NULL_STRING,
 }
 
 def main (input_file, output_file = False ) :
