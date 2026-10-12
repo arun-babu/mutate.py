@@ -218,6 +218,42 @@ mutation_trick = {
 	"static " : NULL_STRING,
 	"volatile " : NULL_STRING,
 	"inline " : NULL_STRING,
+
+	# scale constants (replacement keeps the digit so " * 20" or " / 2.0" stay valid)
+	" * 2" :
+		[ " / 2", " * 1", " * 3" ],
+	" / 2" :
+		[ " * 2", " / 1", " / 3" ],
+
+	# compare against zero / NULL
+	" == 0" :
+		[ " != 0", " > 0", " < 0" ],
+	" != 0" :
+		[ " == 0", " > 0", " < 0" ],
+	" == NULL" : " != NULL",
+	" != NULL" : " == NULL",
+
+	# drop a logical negation
+	"(!" : "(",
+
+	# void early return
+	"return;" : "{;}",
+
+	# printf format / escape swaps
+	"%d" :
+		[ "%u", "%x", "%o", "%c" ],
+	"\\n" :
+		[ "\\t", "\\r", " " ],
+
+	# off-by-one on string length
+	" strlen(" :
+		[ " 1 + strlen(", " -1 + strlen(" ],
+
+	# library constants (leading space so UINT_MAX is not touched)
+	"EXIT_SUCCESS" : "EXIT_FAILURE",
+	"EXIT_FAILURE" : "EXIT_SUCCESS",
+	" INT_MAX" : " INT_MIN",
+	" INT_MIN" : " INT_MAX",
 }
 
 def main (input_file, output_file = False ) :
@@ -243,8 +279,11 @@ def main (input_file, output_file = False ) :
 
 		for m in mutant_operators :
 		#
+			# " !" must not match the start of " !=", mask it (same length, so indexes stay valid)
+			search_line = source_code[i].replace(" !=", " ?=") if m == " !" else source_code[i]
+
 			# search for substrings we can mutate
-			number_of_substrings_found = source_code[i].count(m)
+			number_of_substrings_found = search_line.count(m)
 
 			if number_of_substrings_found > 0 :
 			#
@@ -257,9 +296,9 @@ def main (input_file, output_file = False ) :
 				for r in range(1,random_substring+1) :
 				#
 					if mutate_at_index == 0 :
-						mutate_at_index = source_code[i].index(m)
+						mutate_at_index = search_line.index(m)
 					else :
-						mutate_at_index = source_code[i].index(m,mutate_at_index+1)
+						mutate_at_index = search_line.index(m,mutate_at_index+1)
 				#
 
 				# if there is more than one way of mutating a substring
